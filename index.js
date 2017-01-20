@@ -31,6 +31,15 @@ module.exports = {
         return crawler.pullBlocks(server, pubkey);
       }),
 
+      synchronize: (server, onHost, onPort, upTo, chunkLength) => {
+        const remote = new Synchroniser(server, onHost, onPort, server.conf, false);
+        const syncPromise = remote.sync(upTo, chunkLength, null, null, null);
+        return {
+          flow: remote,
+          syncPromise: syncPromise
+        };
+      },
+
       testForSync: (server, onHost, onPort) => {
         const remote = new Synchroniser(server, onHost, onPort);
         return remote.test();
@@ -73,12 +82,7 @@ module.exports = {
         const nopeers = program.nopeers;
         const noShufflePeers = program.noshuffle;
         const remote = new Synchroniser(server, onHost, onPort, conf, interactive === true);
-        const syncPromise = remote.sync(upTo, chunkLength, askedCautious, nopeers, noShufflePeers === true);
-        // return {
-        //   flow: remote,
-        //   syncPromise: syncPromise
-        // };
-        return syncPromise;
+        return remote.sync(upTo, chunkLength, askedCautious, nopeers, noShufflePeers === true);
       })
     }, {
       name: 'peer [host] [port]',
