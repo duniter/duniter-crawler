@@ -19,7 +19,7 @@ module.exports = {
     },
 
     service: {
-      neutral: (server, conf, logger) => new Crawler(server, conf, logger)
+      process: (server, conf, logger) => new Crawler(server, conf, logger)
     },
 
     methods: {
