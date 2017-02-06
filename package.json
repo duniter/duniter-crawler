@@ -25,7 +25,9 @@
   "dependencies": {
     "async": "2.1.4",
     "co": "4.6.0",
+    "duniter": "^0.90.5",
     "duniter-bma": "^0.2.4",
+    "duniter-common": "^0.1.0",
     "inquirer": "2.0.0",
     "moment": "2.17.1",
     "multimeter": "0.1.1",
