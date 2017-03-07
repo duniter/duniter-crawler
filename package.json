@@ -1,6 +1,6 @@
 {
   "name": "duniter-crawler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "mocha --growl --timeout 10000 test/"
@@ -26,8 +26,8 @@
     "async": "2.1.4",
     "co": "4.6.0",
     "duniter": "^0.90.5",
-    "duniter-bma": "^0.2.4",
-    "duniter-common": "^0.1.0",
+    "duniter-bma": "^1.0.0",
+    "duniter-common": "^1.0.0",
     "inquirer": "2.0.0",
     "moment": "2.17.1",
     "multimeter": "0.1.1",
