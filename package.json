@@ -28,7 +28,6 @@
     "duniter": "^0.90.5",
     "duniter-bma": "^1.0.4",
     "duniter-common": "^1.0.0",
-    "inquirer": "3.0.6",
     "moment": "2.18.1",
     "multimeter": "0.1.1",
     "querablep": "0.1.0",
