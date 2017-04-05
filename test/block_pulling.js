@@ -2,7 +2,6 @@
 var should = require('should');
 var _ = require('underscore');
 var co = require('co');
-var Q = require('q');
 var pulling = require('../lib/pulling');
 
 let commonConf = {
@@ -188,7 +187,7 @@ function pullinTest(testConfiguration) {
  * Network mocker
  * @param blockchain
  * @param sideChains
- * @returns {{localCurrent: (function(): (*|Q.Promise<*>|Q.Promise<T>)), remoteCurrent: (function(): (*|Q.Promise<*>|Q.Promise<T>)), remotePeers: (function(): (*|Q.Promise<*>|Q.Promise<T>)), getRemoteBlock: (function(): (*|Q.Promise<*|null>|Q.Promise<T>)), applyMainBranch: (function(): (*|Q.Promise<Number|*|_Chain<*>>|Q.Promise<T>)), removeForks: (function(): (*|Q.Promise<T>)), isMemberPeer: (function(): (*|Q.Promise<boolean>|Q.Promise<T>)), findCommonRoot: (function(): (*|Promise)), downloadBlocks: (function(): (*|Q.Promise<Buffer|ArrayBuffer|Array.<any>|string|*|_Chain<any>>|Q.Promise<T>)), applyBranch: (function())}}
+ * @returns DAO
  */
 function mockDao(blockchain, sideChains) {
   const dao = pulling.abstractDao({
@@ -204,7 +203,7 @@ function mockDao(blockchain, sideChains) {
     }),
 
     // Get the remote peers to be pulled
-    remotePeers: () => Q(sideChains.map((sc, index) => {
+    remotePeers: () => Promise.resolve(sideChains.map((sc, index) => {
       sc.pubkey = 'PUBK' + index;
       return sc;
     })),

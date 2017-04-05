@@ -36,6 +36,7 @@ module.exports = {
         const crawler = new Crawler(server, server.conf, server.logger);
         return crawler.sandboxPull(server);
       }),
+
       synchronize: (server, onHost, onPort, upTo, chunkLength) => {
         const remote = new Synchroniser(server, onHost, onPort, server.conf, false);
         const syncPromise = remote.sync(upTo, chunkLength, null, null, null);
@@ -106,7 +107,7 @@ module.exports = {
           logger.info('Applied');
           let selfPeer = yield server.dal.getPeer(server.PeeringService.pubkey);
           if (!selfPeer) {
-            yield Q.nfcall(server.PeeringService.generateSelfPeer, server.conf, 0);
+            yield server.PeeringService.generateSelfPeer(server.conf, 0)
             selfPeer = yield server.dal.getPeer(server.PeeringService.pubkey);
           }
           logger.info('Send self peering ...');
