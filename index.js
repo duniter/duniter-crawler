@@ -31,6 +31,10 @@ module.exports = {
         return crawler.pullBlocks(server, pubkey);
       }),
 
+      pullSandbox: (server) => co(function*() {
+        const crawler = new Crawler(server, server.conf, server.logger);
+        return crawler.sandboxPull(server);
+      }),
       synchronize: (server, onHost, onPort, upTo, chunkLength) => {
         const remote = new Synchroniser(server, onHost, onPort, server.conf, false);
         const syncPromise = remote.sync(upTo, chunkLength, null, null, null);
