@@ -62,6 +62,7 @@ module.exports = {
     cli: [{
       name: 'sync [host] [port] [to]',
       desc: 'Synchronize blockchain from a remote Duniter node',
+      preventIfRunning: true,
       onDatabaseExecute: (server, conf, program, params) => co(function*() {
         const host = params[0];
         const port = params[1];
@@ -93,6 +94,7 @@ module.exports = {
     }, {
       name: 'peer [host] [port]',
       desc: 'Exchange peerings with another node',
+      preventIfRunning: true,
       onDatabaseExecute: (server, conf, program, params) => co(function*() {
         const host = params[0];
         const port = params[1];
