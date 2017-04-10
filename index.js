@@ -5,6 +5,7 @@ const Crawler = require('./lib/crawler');
 const Synchroniser = require('./lib/sync');
 const contacter = require('./lib/contacter');
 const constants = require('./lib/constants');
+const req2fwd = require('./lib/req2fwd');
 const common = require('duniter-common');
 
 module.exports = {
@@ -125,56 +126,32 @@ module.exports = {
         }
       })
     }, {
-      name: 'import-lookup [search] [fromhost] [fromport] [tohost] [toport]',
-      desc: 'Exchange peerings with another node',
+      name: 'import <fromHost> <fromPort> <search> <toHost> <toPort>',
+      desc: 'Import all pending data from matching <search>',
       onDatabaseExecute: (server, conf, program, params) => co(function*() {
-        const search = params[0];
-        const fromhost = params[1];
-        const fromport = params[2];
-        const tohost = params[3];
-        const toport = params[4];
+        const fromHost = params[0];
+        const fromPort = params[1];
+        const search = params[2];
+        const toHost = params[3];
+        const toPort = params[4];
         const logger = server.logger;
         try {
-          logger.info('Looking for "%s" at %s:%s...', search, fromhost, fromport);
-          const sourcePeer = contacter(fromhost, fromport);
-          const targetPeer = contacter(tohost, toport);
-          const lookup = yield sourcePeer.getLookup(search);
-          for (const res of lookup.results) {
-            for (const uid of res.uids) {
-              const rawIdty = common.rawer.getOfficialIdentity({
-                currency: 'g1',
-                issuer: res.pubkey,
-                uid: uid.uid,
-                buid: uid.meta.timestamp,
-                sig: uid.self
-              });
-              logger.info('Success idty %s', uid.uid);
-              try {
-                yield targetPeer.postIdentity(rawIdty);
-              } catch (e) {
-                logger.error(e);
-              }
-              for (const received of uid.others) {
-                const rawCert = common.rawer.getOfficialCertification({
-                  currency: 'g1',
-                  issuer: received.pubkey,
-                  idty_issuer: res.pubkey,
-                  idty_uid: uid.uid,
-                  idty_buid: uid.meta.timestamp,
-                  idty_sig: uid.self,
-                  buid: common.buid.format.buid(received.meta.block_number, received.meta.block_hash),
-                  sig: received.signature
-                });
-                try {
-                  logger.info('Success idty %s', uid.uid);
-                  yield targetPeer.postCert(rawCert);
-                } catch (e) {
-                  logger.error(e);
-                }
-              }
+          const Peer = server.lib.Peer;
+          const peers = fromHost && fromPort ? [{ endpoints: [['BASIC_MERKLED_API', fromHost, fromPort].join(' ')] }] : yield server.dal.peerDAL.query('SELECT * FROM peer WHERE status = ?', ['UP'])
+          // Memberships
+          for (const p of peers) {
+            const peer = Peer.statics.fromJSON(p);
+            const fromHost = peer.getHostPreferDNS();
+            const fromPort = peer.getPort();
+            logger.info('Looking at %s:%s...', fromHost, fromPort);
+            try {
+              const node = contacter(fromHost, fromPort, { timeout: 10000 });
+              const requirements = yield node.getRequirements(search);
+              yield req2fwd(requirements, toHost, toPort, logger)
+            } catch (e) {
+              logger.error(e);
             }
           }
-          logger.info('Sent.');
           yield server.disconnect();
         } catch(e) {
           logger.error(e);
@@ -193,10 +170,6 @@ module.exports = {
         try {
           const Peer = server.lib.Peer;
           const peers = fromHost && fromPort ? [{ endpoints: [['BASIC_MERKLED_API', fromHost, fromPort].join(' ')] }] : yield server.dal.peerDAL.query('SELECT * FROM peer WHERE status = ?', ['UP'])
-          const mss = {};
-          const identities = {};
-          const certs = {};
-          const targetPeer = contacter(toHost, parseInt(toPort), { timeout: 10000 });
           // Memberships
           for (const p of peers) {
             const peer = Peer.statics.fromJSON(p);
@@ -206,79 +179,7 @@ module.exports = {
             try {
               const node = contacter(fromHost, fromPort, { timeout: 10000 });
               const requirements = yield node.getRequirementsPending(program.minsig || 5);
-              // Identities
-              for (const idty of requirements.identities) {
-                try {
-                  const iid = [idty.pubkey, idty.uid, idty.meta.timestamp].join('-');
-                  if (!identities[iid]) {
-                    logger.info('New identity %s', idty.uid);
-                    identities[iid] = idty;
-                    try {
-                      const rawIdty = common.rawer.getOfficialIdentity({
-                        currency: 'g1',
-                        issuer: idty.pubkey,
-                        uid: idty.uid,
-                        buid: idty.meta.timestamp,
-                        sig: idty.sig
-                      });
-                      logger.info('Posting idty %s...', idty.uid);
-                      yield targetPeer.postIdentity(rawIdty);
-                      logger.info('Success idty %s', idty.uid);
-                    } catch (e) {
-                      logger.warn(e);
-                    }
-                  }
-                  for (const received of idty.pendingCerts) {
-                    const cid = [received.from, iid].join('-');
-                    if (!certs[cid]) {
-                      logger.info('New cert %s -> %s', received.from, idty.uid);
-                      yield new Promise((res) => setTimeout(res, 300));
-                      certs[cid] = received;
-                      const rawCert = common.rawer.getOfficialCertification({
-                        currency: 'g1',
-                        issuer: received.from,
-                        idty_issuer: idty.pubkey,
-                        idty_uid: idty.uid,
-                        idty_buid: idty.meta.timestamp,
-                        idty_sig: idty.sig,
-                        buid: received.blockstamp,
-                        sig: received.sig
-                      });
-                      try {
-                        yield targetPeer.postCert(rawCert);
-                        logger.info('Success cert %s -> %s', received.from, idty.uid);
-                      } catch (e) {
-                        logger.warn(e);
-                      }
-                    }
-                  }
-                  for (const theMS of idty.pendingMemberships) {
-                    // + Membership
-                    const id = [idty.pubkey, idty.uid, theMS.blockstamp].join('-');
-                    if (!mss[id]) {
-                      mss[id] = theMS
-                      logger.info('New membership pending for %s', idty.uid);
-                      try {
-                        const rawMS = common.rawer.getMembership({
-                          currency: 'g1',
-                          issuer: idty.pubkey,
-                          userid: idty.uid,
-                          block: theMS.blockstamp,
-                          membership: theMS.type,
-                          certts: idty.meta.timestamp,
-                          signature: theMS.sig
-                        });
-                        yield targetPeer.postRenew(rawMS);
-                        logger.info('Success ms idty %s', idty.uid);
-                      } catch (e) {
-                        logger.warn(e);
-                      }
-                    }
-                  }
-                } catch (e) {
-                  logger.warn(e);
-                }
-              }
+              yield req2fwd(requirements, toHost, toPort, logger)
             } catch (e) {
               logger.error(e);
             }
