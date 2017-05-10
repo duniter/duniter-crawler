@@ -15,3 +15,12 @@ sudo: false
 
 # Unit Tests (+code coverage)
 script: yarn test
+deploy:
+  - provider: npm
+    email: cem.moreau@gmail.com
+    skip_cleanup: true
+    api_key:
+      secure: Ve/wwBMJET5NRloZV3Brh3tTtIYNyqZjbpjsi3rSj+AP+YAXTFTv3VwhVoiwIl3I0PN3g9zmaB/e5ZWdUZsIenioYd6yd/TJyEu1ezQvRoKdIOkfDYqJFkX9BnBuwnW+wu1lcLzcWv5OBYPtYK0YziiUV5g9k00w1vQTGM9g9PNx21RmmvTXsUcU6ElDFf+lwuMSJ6fW2vW5OIpLNyfAJv2Rnop4/L69pFRDMu974v0jQdfuIbEiEY07BNJjcROe0A0dr6X9E/Ba9LNncYUlGKNjQBv5X/CImHhZ65c240q3uYRXUXRuampjdm2R2MZw4Kte8XChumd8wgIKUep71xFaDwyiU1ciMT/Gw/lTrohmMq1dJ+cDgFXYvGBWbONXHooGNabiFUuw8nlAjX83PvJCd5WncKiZHOihUlSbEEe4fkpE1odi7GdfxR0hoxlfN7+G1TR3B00KgnkWuDRnAUckD25ElUaWKrHxvJInlpbB+atqYmf83bKkU3IyyIRgT18Mg0VfP/7IlbRAsInM+zTYSK3ccm902KFrBAvNAGon3oSsvTO1BXA3+oWpItwRneCiiP1C5+ygtXEG5pMH/pw9XQJp+IBuoaTm7FpoHPxxkBa9xUo3iLbltZtdyCjaPp+zD1cF5JAa3Ft/jiw6CfDvYT4+FYfjk7bX36Dt/hk=
+    on:
+      tags: true
+      repo: duniter/duniter-crawler
