@@ -58,6 +58,7 @@ module.exports = {
       { value: '--nocautious',    desc: 'Do not check blocks validity during sync.'},
       { value: '--cautious',      desc: 'Check blocks validity during sync (overrides --nocautious option).'},
       { value: '--nopeers',       desc: 'Do not retrieve peers during sync.'},
+      { value: '--slow',          desc: 'Download slowly the blokchcain (for low connnections).'},
       { value: '--minsig <minsig>', desc: 'Minimum pending signatures count for `crawl-lookup`. Default is 5.'}
     ],
 
@@ -90,7 +91,7 @@ module.exports = {
         const askedCautious = cautious;
         const nopeers = program.nopeers;
         const noShufflePeers = program.noshuffle;
-        const remote = new Synchroniser(server, onHost, onPort, conf, interactive === true);
+        const remote = new Synchroniser(server, onHost, onPort, conf, interactive === true, program.slow === true);
         return remote.sync(upTo, chunkLength, askedCautious, nopeers, noShufflePeers === true);
       })
     }, {
