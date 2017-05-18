@@ -7,6 +7,7 @@ const contacter = require('./lib/contacter');
 const constants = require('./lib/constants');
 const req2fwd = require('./lib/req2fwd');
 const common = require('duniter-common');
+const Peer = common.document.Peer
 
 module.exports = {
   duniter: {
@@ -104,7 +105,6 @@ module.exports = {
         const logger = server.logger;
         try {
           const ERASE_IF_ALREADY_RECORDED = true;
-          const Peer = server.lib.Peer;
           logger.info('Fetching peering record at %s:%s...', host, port);
           let peering = yield contacter.statics.fetchPeer(host, port);
           logger.info('Apply peering ...');
@@ -116,9 +116,9 @@ module.exports = {
             selfPeer = yield server.dal.getPeer(server.PeeringService.pubkey);
           }
           logger.info('Send self peering ...');
-          const p = Peer.statics.peerize(peering);
+          const p = Peer.fromJSON(peering);
           const contact = contacter(p.getHostPreferDNS(), p.getPort(), opts);
-          yield contact.postPeer(Peer.statics.peerize(selfPeer));
+          yield contact.postPeer(Peer.fromJSON(selfPeer));
           logger.info('Sent.');
           yield server.disconnect();
         } catch(e) {
@@ -137,11 +137,10 @@ module.exports = {
         const toPort = params[4];
         const logger = server.logger;
         try {
-          const Peer = server.lib.Peer;
           const peers = fromHost && fromPort ? [{ endpoints: [['BASIC_MERKLED_API', fromHost, fromPort].join(' ')] }] : yield server.dal.peerDAL.query('SELECT * FROM peer WHERE status = ?', ['UP'])
           // Memberships
           for (const p of peers) {
-            const peer = Peer.statics.fromJSON(p);
+            const peer = Peer.fromJSON(p);
             const fromHost = peer.getHostPreferDNS();
             const fromPort = peer.getPort();
             logger.info('Looking at %s:%s...', fromHost, fromPort);
@@ -169,11 +168,10 @@ module.exports = {
         const fromPort = params[3]
         const logger = server.logger;
         try {
-          const Peer = server.lib.Peer;
           const peers = fromHost && fromPort ? [{ endpoints: [['BASIC_MERKLED_API', fromHost, fromPort].join(' ')] }] : yield server.dal.peerDAL.query('SELECT * FROM peer WHERE status = ?', ['UP'])
           // Memberships
           for (const p of peers) {
-            const peer = Peer.statics.fromJSON(p);
+            const peer = Peer.fromJSON(p);
             const fromHost = peer.getHostPreferDNS();
             const fromPort = peer.getPort();
             logger.info('Looking at %s:%s...', fromHost, fromPort);
