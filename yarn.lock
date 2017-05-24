@@ -134,6 +134,12 @@ balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
 
+base-x@^2.0.1:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-2.0.6.tgz#4582a91ebcec99ee06f4e4032030b0cf1c2941d8"
+  dependencies:
+    safe-buffer "^5.0.1"
+
 basic-auth@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/basic-auth/-/basic-auth-1.1.0.tgz#45221ee429f7ee1e5035be3f51533f1cdfd29884"
@@ -214,6 +220,12 @@ brace-expansion@^1.1.7:
 browser-stdout@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.0.tgz#f351d32969d32fa5d7a5567154263d928ae3bd1f"
+
+bs58@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-4.0.0.tgz#65f5deaf6d74e6135a99f763ca6209ab424b9172"
+  dependencies:
+    base-x "^2.0.1"
 
 buffer-crc32@^0.2.1:
   version "0.2.13"
@@ -473,9 +485,9 @@ diff@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-1.4.0.tgz#7f28d2eb9ee7b15a97efd89ce63dcfdaa3ccbabf"
 
-duniter-bma@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/duniter-bma/-/duniter-bma-1.3.0.tgz#a7e383756d92f937c72449debe027bb5a6bbb729"
+duniter-bma@1.3.x:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/duniter-bma/-/duniter-bma-1.3.1.tgz#8dc4ae2b1e899f6a94c4138b030a6037e72a4509"
   dependencies:
     async "2.2.0"
     body-parser "1.17.1"
@@ -496,14 +508,15 @@ duniter-bma@^1.3.0:
     underscore "1.8.3"
     ws "1.1.1"
 
-duniter-common@^1.0.0, duniter-common@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/duniter-common/-/duniter-common-1.3.0.tgz#834f5d8f244a0b377146735795d2e5d0328b2cfd"
+duniter-common@1.3.x, duniter-common@^1.0.0, duniter-common@^1.3.0:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/duniter-common/-/duniter-common-1.3.3.tgz#d92df1a8c836bc6b3f0dc264af74106dc067765a"
   dependencies:
+    bs58 "^4.0.0"
     co "4.6.0"
     jison "0.4.17"
-    naclb "1.3.7"
-    node-pre-gyp "0.6.32"
+    naclb "1.3.9"
+    seedrandom "^2.4.3"
     tweetnacl "0.14.3"
     underscore "1.8.3"
 
@@ -674,9 +687,11 @@ extend@^3.0.0, extend@~3.0.0:
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
 external-editor@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.0.2.tgz#384f6d8ae02054235c19e0a142c6d6fc36ad9363"
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.0.4.tgz#1ed9199da9cbfe2ef2f7a31b2fde8b0d12368972"
   dependencies:
+    iconv-lite "^0.4.17"
+    jschardet "^1.4.2"
     tmp "^0.0.31"
 
 extsprintf@1.0.2:
@@ -898,6 +913,10 @@ iconv-lite@0.4.15:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
+iconv-lite@^0.4.17:
+  version "0.4.17"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.17.tgz#4fdaa3b38acbc2c031b045d0edcdfe1ecab18c8d"
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -998,6 +1017,10 @@ jodid25519@^1.0.0:
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
+
+jschardet@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/jschardet/-/jschardet-1.4.2.tgz#2aa107f142af4121d145659d44f50830961e699a"
 
 json-schema@0.2.3:
   version "0.2.3"
@@ -1182,13 +1205,17 @@ minimatch@^3.0.0, minimatch@^3.0.2:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@0.0.8, minimist@~0.0.1:
+minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
 minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
+
+minimist@~0.0.1:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
 
 mkdirp@0.5, mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
@@ -1248,13 +1275,13 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
-naclb@1.3.7:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/naclb/-/naclb-1.3.7.tgz#df606c3ae4442e67932c9aaeaf36eebef8860b48"
+naclb@1.3.9:
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/naclb/-/naclb-1.3.9.tgz#8fdf893682a71494b964b24f4b59429d02998ef7"
   dependencies:
     bindings "1.2.1"
     nan "2.2.0"
-    node-pre-gyp "0.6.23"
+    node-pre-gyp "0.6.33"
 
 nan@2.2.0:
   version "2.2.0"
@@ -1295,9 +1322,9 @@ node-pre-gyp@0.6.23:
     tar "~2.2.0"
     tar-pack "~3.1.0"
 
-node-pre-gyp@0.6.32:
-  version "0.6.32"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.32.tgz#fc452b376e7319b3d255f5f34853ef6fd8fe1fd5"
+node-pre-gyp@0.6.33:
+  version "0.6.33"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.33.tgz#640ac55198f6a925972e0c16c4ac26a034d5ecc9"
   dependencies:
     mkdirp "~0.5.1"
     nopt "~3.0.6"
@@ -1529,7 +1556,16 @@ raw-body@~2.2.0:
     iconv-lite "0.4.15"
     unpipe "1.0.0"
 
-rc@^1.1.7, rc@~1.1.0, rc@~1.1.6:
+rc@^1.1.7:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.1.tgz#2e03e8e42ee450b8cb3dce65be1bf8974e1dfd95"
+  dependencies:
+    deep-extend "~0.4.0"
+    ini "~1.3.0"
+    minimist "^1.2.0"
+    strip-json-comments "~2.0.1"
+
+rc@~1.1.0, rc@~1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.1.7.tgz#c5ea564bb07aff9fd3a5b32e906c1d3a65940fea"
   dependencies:
@@ -1674,6 +1710,10 @@ safe-buffer@^5.0.1:
 sax@>=0.1.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.2.tgz#fd8631a23bc7826bef5d871bdb87378c95647828"
+
+seedrandom@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/seedrandom/-/seedrandom-2.4.3.tgz#2438504dad33917314bff18ac4d794f16d6aaecc"
 
 semver@^5.3.0, semver@~5.3.0:
   version "5.3.0"
